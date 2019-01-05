@@ -1,8 +1,8 @@
+[![Build Status](https://travis-ci.org/martingallagher/iter.svg)](https://travis-ci.org/martingallagher/iter) [![GoDoc](https://godoc.org/github.com/martingallagher/iter?status.svg)](https://godoc.org/github.com/martingallagher/iter) [![Go Report Card](https://goreportcard.com/badge/github.com/martingallagher/iter)](https://goreportcard.com/report/github.com/martingallagher/iter) [![license](https://img.shields.io/github/license/martingallagher/iter.svg)](https://github.com/martingallagher/iter/blob/master/LICENSE)
+
 # iter: Byte and String Iterators
 
 `iter` provides low overhead (zero allocation where possible) iterators for strings and byte slices, fulfilling both `(bytes|strings).Split` and `(bytes|strings).FieldsFunc` functionality and additional helper functions.
-
-[![Build Status](https://travis-ci.org/martingallagher/iter.svg)](https://travis-ci.org/martingallagher/iter) [![GoDoc](https://godoc.org/github.com/martingallagher/iter?status.svg)](https://godoc.org/github.com/martingallagher/iter) [![Go Report Card](https://goreportcard.com/badge/github.com/martingallagher/iter)](https://goreportcard.com/report/github.com/martingallagher/iter) [![license](https://img.shields.io/github/license/martingallagher/iter.svg)](https://github.com/martingallagher/iter/blob/master/LICENSE)
 
 ## Examples
 

@@ -25,6 +25,10 @@ func unsafeBytes(s string) []byte {
 	}))
 }
 
+func unsafeString(b []byte) string {
+	return *(*string)(unsafe.Pointer(&b))
+}
+
 // EmitAll emits all (including consecutive) matches.
 func (s *String) EmitAll() {
 	s.b.emitAll = true
@@ -40,7 +44,7 @@ func (s *String) ForEach(f func(string)) {
 	s.b.Reset()
 
 	for s.b.Next() {
-		f(s.b.String())
+		f(unsafeString(s.b.v))
 	}
 }
 
@@ -59,14 +63,9 @@ func (s *String) Chan() <-chan string {
 	return values
 }
 
-// Bytes returns the current byte slice value.
-func (s *String) Bytes() []byte {
-	return s.b.v
-}
-
 // String returns the current string value.
 func (s *String) String() string {
-	return s.b.String()
+	return unsafeString(s.b.v)
 }
 
 // Reset resets the iterator start position.
@@ -95,7 +94,7 @@ func (s *StringFunc) ForEach(f func(string)) {
 	s.b.Reset()
 
 	for s.b.Next() {
-		f(s.b.String())
+		f(unsafeString(s.b.v))
 	}
 }
 
@@ -114,14 +113,9 @@ func (s *StringFunc) Chan() <-chan string {
 	return values
 }
 
-// Bytes returns the current byte slice value.
-func (s *StringFunc) Bytes() []byte {
-	return s.b.v
-}
-
 // String returns the current string value.
 func (s *StringFunc) String() string {
-	return s.b.String()
+	return unsafeString(s.b.v)
 }
 
 // Reset resets the iterator start position.

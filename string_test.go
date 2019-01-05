@@ -11,7 +11,7 @@ import (
 func TestString(t *testing.T) {
 	for _, sep := range seperators {
 		for _, v := range tests {
-			expected := removeEmptyStrings(strings.Split(v, string(sep)))
+			expected := removeEmptyStrings(strings.Split(v, sep))
 			values := make([]string, 0, len(expected))
 			iter := NewString(v, sep)
 
@@ -31,7 +31,7 @@ func TestString(t *testing.T) {
 func TestStringForEach(t *testing.T) {
 	for _, sep := range seperators {
 		for _, v := range tests {
-			expected := removeEmptyStrings(strings.Split(v, string(sep)))
+			expected := removeEmptyStrings(strings.Split(v, sep))
 			l := len(expected)
 			values := make([]string, 0, l)
 			iter := NewString(v, sep)

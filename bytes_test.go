@@ -155,21 +155,6 @@ func TestBytesFunc(t *testing.T) {
 	})
 }
 
-func TestBytesFuncEmitAll(t *testing.T) {
-	var out []string
-
-	iter := NewBytesFunc([]byte("hello world"), func(r rune) bool {
-		return unicode.IsSpace(r)
-	})
-	iter.EmitAll()
-
-	iter.ForEach(func(b []byte) {
-		out = append(out, string(b))
-	})
-
-	fmt.Printf("%#v", out)
-}
-
 func testBytes(expected, got [][]byte) error {
 	if !equalBytes(expected, got) {
 		return fmt.Errorf("byte slice failed; expected %v (len=%d), got %v (len=%d)",

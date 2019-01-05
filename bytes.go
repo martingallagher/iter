@@ -3,7 +3,6 @@ package iter
 import (
 	"bytes"
 	"unicode/utf8"
-	"unsafe"
 )
 
 // Bytes is a bytes substring iterator.
@@ -92,7 +91,7 @@ func (b *Bytes) Next() bool {
 		return true
 	}
 
-	// Emit remaing value
+	// Emit remaining value
 	b.v = b.b[b.start:]
 	b.start += b.l
 
@@ -146,11 +145,6 @@ func (b *Bytes) Bytes() []byte {
 	return b.v
 }
 
-// String returns the current string value.
-func (b *Bytes) String() string {
-	return *(*string)(unsafe.Pointer(&b.v))
-}
-
 // Reset resets the iterator start position.
 func (b *Bytes) Reset() {
 	b.start = 0
@@ -163,17 +157,11 @@ type BytesFunc struct {
 	b        []byte
 	v        []byte
 	l, start int
-	emitAll  bool
 }
 
 // NewBytesFunc returns a new BytesFunc iterator.
 func NewBytesFunc(b []byte, f func(rune) bool) *BytesFunc {
 	return &BytesFunc{f: f, b: b, l: len(b)}
-}
-
-// EmitAll emits all (including consecutive) matches.
-func (b *BytesFunc) EmitAll() {
-	b.emitAll = true
 }
 
 // Next iterates to the next value; returning false if the iterator is exhausted.
@@ -252,11 +240,6 @@ func (b *BytesFunc) Chan() <-chan []byte {
 // Bytes returns the current byte slice value.
 func (b *BytesFunc) Bytes() []byte {
 	return b.v
-}
-
-// String returns the current string value.
-func (b *BytesFunc) String() string {
-	return *(*string)(unsafe.Pointer(&b.v))
 }
 
 // Reset resets the iterator start position.

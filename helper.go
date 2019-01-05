@@ -26,7 +26,7 @@ func isNotLN(r rune) bool {
 	return !unicode.IsLetter(r) && !unicode.IsNumber(r)
 }
 
-// Words returns a new string iterator emitting words.
+// Words returns a new string iterator naively emitting words.
 func Words(s string) *StringFunc {
 	return NewStringFunc(s, isNotLN)
 }
