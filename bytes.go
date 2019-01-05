@@ -166,11 +166,7 @@ func NewBytesFunc(b []byte, f func(rune) bool) *BytesFunc {
 
 // Next iterates to the next value; returning false if the iterator is exhausted.
 func (b *BytesFunc) Next() bool {
-	if b.start > b.l {
-		return false
-	}
-
-	if b.start == b.l {
+	if b.start >= b.l {
 		return false
 	}
 
