@@ -188,7 +188,7 @@ func TestWordsCount(t *testing.T) {
 	expected := countStd(benchString, needle)
 	count := count(benchString, needle)
 
-	t.Logf("Found %d occurences of %q", count, needle)
+	t.Logf("Found %d occurrences of %q", count, needle)
 
 	if count != expected {
 		t.Errorf("expected %d, got %d", expected, count)
