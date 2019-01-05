@@ -31,7 +31,7 @@ func (b *Bytes) Next() bool {
 	}
 
 	if b.n == 0 {
-		// Zero length substr; replicated bytes.Split and emit runes
+		// Empty needle; replicate bytes.Split and split after each UTF-8 sequence
 		return b.nextRune()
 	}
 
