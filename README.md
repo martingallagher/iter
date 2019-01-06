@@ -46,20 +46,17 @@ func iterCountOccurrences(s, word string) int {
 
 ## Benchmarks
 
-    go test -failfast -bench=. -benchmem
     goos: linux
     goarch: amd64
     pkg: github.com/martingallagher/iter
-    BenchmarkBytes-8           	  100000	     20768 ns/op	       0 B/op	       0 allocs/op
-    BenchmarkString-8          	  100000	     21091 ns/op	       0 B/op	       0 allocs/op
-    BenchmarkBytesForEach-8    	  100000	     21063 ns/op	       0 B/op	       0 allocs/op
-    BenchmarkStringForEach-8   	  100000	     20947 ns/op	       0 B/op	       0 allocs/op
-    BenchmarkBytesEmitAll-8    	  100000	     20487 ns/op	       0 B/op	       0 allocs/op
-    BenchmarkStringEmitAll-8   	  100000	     21200 ns/op	       0 B/op	       0 allocs/op
-    BenchmarkBytesFunc-8       	  100000	     20285 ns/op	       0 B/op	       0 allocs/op
-    BenchmarkStringFunc-8      	  100000	     21142 ns/op	       0 B/op	       0 allocs/op
-    BenchmarkStdStringsMap-8   	  100000	     22957 ns/op	   11264 B/op	       4 allocs/op
-    BenchmarkWordsCount-8      	   30000	     47930 ns/op	      64 B/op	       1 allocs/op
-    BenchmarkWordsStdCount-8   	   30000	     52943 ns/op	   20736 B/op	       5 allocs/op
+    BenchmarkBytes-8           	  100000	     20970 ns/op	       0 B/op	       0 allocs/op
+    BenchmarkString-8          	  100000	     21336 ns/op	       0 B/op	       0 allocs/op
+    BenchmarkBytesForEach-8    	  100000	     21333 ns/op	       0 B/op	       0 allocs/op
+    BenchmarkStringForEach-8   	  100000	     21186 ns/op	       0 B/op	       0 allocs/op
+    BenchmarkBytesEmitAll-8    	  100000	     20951 ns/op	       0 B/op	       0 allocs/op
+    BenchmarkStringEmitAll-8   	  100000	     20948 ns/op	       0 B/op	       0 allocs/op
+    BenchmarkBytesFunc-8       	  100000	     19442 ns/op	       0 B/op	       0 allocs/op
+    BenchmarkStringFunc-8      	  100000	     19806 ns/op	       0 B/op	       0 allocs/op
+    BenchmarkStdStringsMap-8   	  100000	     21504 ns/op	   11264 B/op	       4 allocs/op
     PASS
-    ok  	github.com/martingallagher/iter	25.083s
+    ok  	github.com/martingallagher/iter	20.693s
