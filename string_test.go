@@ -1,11 +1,9 @@
 package iter
 
 import (
-	"errors"
 	"fmt"
 	"strings"
 	"testing"
-	"unicode"
 )
 
 func TestString(t *testing.T) {
@@ -94,107 +92,6 @@ func TestStringFunc(t *testing.T) {
 	})
 }
 
-func TestStringHelpers(t *testing.T) {
-	iterators := []struct {
-		iter func(string) *FuncIter
-		f    func(rune) bool
-	}{
-		{Fields, unicode.IsSpace},
-		{Lines, isNewline},
-		{Numbers, unicode.IsNumber},
-		{Words, isNotLN},
-	}
-
-	for _, v := range iterators {
-		name := funcName(v.f)
-
-		t.Run(name, func(t *testing.T) {
-			for _, s := range tests {
-				expected := strings.FieldsFunc(s, v.f)
-				iter := v.iter(s)
-				l := len(expected)
-				values := make([]string, 0, l)
-
-				for iter.Next() {
-					values = append(values, iter.String())
-				}
-
-				if !equalStrings(expected, values) {
-					t.Errorf("%s iterator failed; expected %v (len=%d), got %v (len=%d)",
-						name, expected, l, values, len(values))
-				}
-			}
-		})
-	}
-}
-
-type IterReseter interface {
-	Next() bool
-	String() string
-	Reset()
-}
-
-func testIterReseter(iter IterReseter) error {
-	var expected []string
-
-	for iter.Next() {
-		expected = append(expected, iter.String())
-	}
-
-	if iter.Next() {
-		return errors.New("unexpected iteration")
-	}
-
-	iter.Reset()
-
-	l := len(expected)
-	values := make([]string, 0, l)
-
-	for iter.Next() {
-		values = append(values, iter.String())
-	}
-
-	if !equalStrings(expected, values) {
-		return fmt.Errorf("expected %v (len=%d), got %v (len=%d)",
-			expected, l, values, len(values))
-	}
-
-	return nil
-}
-
-func TestStringReset(t *testing.T) {
-	tests := []struct {
-		name string
-		iter IterReseter
-	}{
-		{"String", NewString(benchString, space)},
-		{"StringFunc", Fields(benchString)},
-	}
-
-	for _, v := range tests {
-		t.Run(v.name, func(t *testing.T) {
-			err := testIterReseter(v.iter)
-
-			if err != nil {
-				t.Error(err)
-			}
-		})
-	}
-}
-
-func TestWordsCount(t *testing.T) {
-	const needle = "Go"
-
-	expected := countStd(benchString, needle)
-	count := count(benchString, needle)
-
-	t.Logf("Found %d occurrences of %q", count, needle)
-
-	if count != expected {
-		t.Errorf("expected %d, got %d", expected, count)
-	}
-}
-
 func testStrings(expected, got []string) error {
 	if !equalStrings(expected, got) {
 		return fmt.Errorf("string slice failed; expected %v (len=%d), got %v (len=%d)",
@@ -204,52 +101,16 @@ func testStrings(expected, got []string) error {
 	return nil
 }
 
-func count(s, needle string) int {
-	count := 0
-	iter := Words(s)
+func equalStrings(a, b []string) bool {
+	if len(a) != len(b) {
+		return false
+	}
 
-	for iter.Next() {
-		if iter.String() == needle {
-			count++
+	for i := range a {
+		if a[i] != b[i] {
+			return false
 		}
 	}
 
-	return count
-}
-
-func countForEach(s, needle string) int {
-	count := 0
-
-	Words(s).ForEachString(func(v string) {
-		if v == needle {
-			count++
-		}
-	})
-
-	return count
-}
-
-func countChan(s, needle string) int {
-	count := 0
-
-	for v := range Words(s).ChanString() {
-		if v == needle {
-			count++
-		}
-	}
-
-	return count
-}
-
-func countStd(s, needle string) int {
-	words := strings.FieldsFunc(s, isNotLN)
-	count := 0
-
-	for _, v := range words {
-		if v == needle {
-			count++
-		}
-	}
-
-	return count
+	return true
 }

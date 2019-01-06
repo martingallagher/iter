@@ -189,18 +189,12 @@ func equalBytes(a, b [][]byte) bool {
 	return true
 }
 
-func equalStrings(a, b []string) bool {
-	if len(a) != len(b) {
-		return false
-	}
+func isNewline(r rune) bool {
+	return r == '\n' || r == '\r'
+}
 
-	for i := range a {
-		if a[i] != b[i] {
-			return false
-		}
-	}
-
-	return true
+func isNotLN(r rune) bool {
+	return !unicode.IsLetter(r) && !unicode.IsNumber(r)
 }
 
 func removeEmptyBytes(s [][]byte) [][]byte {

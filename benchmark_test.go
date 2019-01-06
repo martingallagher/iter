@@ -127,27 +127,3 @@ func BenchmarkStdStringsMap(b *testing.B) {
 		_ = strings.FieldsFunc(benchString, unicode.IsSpace)
 	}
 }
-
-func BenchmarkWordsCount(b *testing.B) {
-	for i := 0; i < b.N; i++ {
-		_ = count(benchString, "Go")
-	}
-}
-
-func BenchmarkWordsCountForEach(b *testing.B) {
-	for i := 0; i < b.N; i++ {
-		_ = countForEach(benchString, "Go")
-	}
-}
-
-func BenchmarkWordsCountChan(b *testing.B) {
-	for i := 0; i < b.N; i++ {
-		_ = countChan(benchString, "Go")
-	}
-}
-
-func BenchmarkWordsCountStd(b *testing.B) {
-	for i := 0; i < b.N; i++ {
-		_ = countStd(benchString, "Go")
-	}
-}
