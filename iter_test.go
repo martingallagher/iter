@@ -4,16 +4,18 @@ import (
 	"bytes"
 	"fmt"
 	"reflect"
-	"runtime"
 	"strings"
 	"testing"
 	"unicode"
+
+	"github.com/martingallagher/iter/internal/function"
+	"github.com/martingallagher/iter/internal/runes"
 )
 
 const space = " "
 
 var (
-	funcs      = []func(rune) bool{unicode.IsSpace, isNewline, isNotLN}
+	funcs      = []func(rune) bool{unicode.IsSpace, runes.IsNewline, runes.IsNotLN}
 	spaceBytes = []byte(space)
 	seperators = []string{"", space, ", ", ",\n"}
 	tests      = []string{
@@ -92,10 +94,10 @@ func TestBytesForEach(t *testing.T) {
 
 func TestBytesFuncChan(t *testing.T) {
 	b := []byte(tests[4])
-	expected := bytes.FieldsFunc(b, isNotLN)
+	expected := bytes.FieldsFunc(b, runes.IsNotLN)
 	values := make([][]byte, 0, len(expected))
 
-	for v := range NewFunc(b, isNotLN).Chan() {
+	for v := range NewFunc(b, runes.IsNotLN).Chan() {
 		values = append(values, v)
 	}
 
@@ -133,7 +135,7 @@ func TestBytesEmitAll(t *testing.T) {
 func TestBytesFunc(t *testing.T) {
 	t.Run("BytesFunc", func(t *testing.T) {
 		for _, f := range funcs {
-			t.Run(funcName(f), func(t *testing.T) {
+			t.Run(function.Name(f), func(t *testing.T) {
 				for _, v := range tests {
 					b := []byte(v)
 					expected := bytes.FieldsFunc(b, f)
@@ -155,8 +157,94 @@ func TestBytesFunc(t *testing.T) {
 	})
 }
 
+func TestString(t *testing.T) {
+	for _, sep := range seperators {
+		for _, v := range tests {
+			expected := removeEmptyStrings(strings.Split(v, sep))
+			values := make([]string, 0, len(expected))
+			iter := NewString(v, sep)
+
+			for iter.Next() {
+				values = append(values, iter.String())
+			}
+
+			err := testStrings(expected, values)
+
+			if err != nil {
+				t.Error(err)
+			}
+		}
+	}
+}
+
+func TestStringForEach(t *testing.T) {
+	for _, sep := range seperators {
+		for _, v := range tests {
+			expected := removeEmptyStrings(strings.Split(v, sep))
+			l := len(expected)
+			values := make([]string, 0, l)
+			iter := NewString(v, sep)
+
+			iter.ForEachString(func(s string) {
+				values = append(values, s)
+			})
+
+			err := testStrings(expected, values)
+
+			if err != nil {
+				t.Error(err)
+			}
+		}
+	}
+}
+
+func TestStringEmitAll(t *testing.T) {
+	for i, sep := range seperators {
+		for j, v := range tests {
+			expected := strings.Split(v, sep)
+			values := make([]string, 0, len(expected))
+			iter := NewString(v, sep)
+			iter.EmitAll()
+
+			for iter.Next() {
+				values = append(values, iter.String())
+			}
+
+			err := testStrings(expected, values)
+
+			if err != nil {
+				t.Errorf("Test %d:%d: %s", i, j, err)
+			}
+		}
+	}
+}
+
+func TestStringFunc(t *testing.T) {
+	t.Run("StringFunc", func(t *testing.T) {
+		for _, f := range funcs {
+			t.Run(function.Name(f), func(t *testing.T) {
+				for _, v := range tests {
+					expected := strings.FieldsFunc(v, f)
+					values := make([]string, 0, len(expected))
+					iter := NewFuncString(v, f)
+
+					for iter.Next() {
+						values = append(values, iter.String())
+					}
+
+					err := testStrings(expected, values)
+
+					if err != nil {
+						t.Error(err)
+					}
+				}
+			})
+		}
+	})
+}
+
 func testBytes(expected, got [][]byte) error {
-	if !equalBytes(expected, got) {
+	if !reflect.DeepEqual(expected, got) {
 		return fmt.Errorf("byte slice failed; expected %v (len=%d), got %v (len=%d)",
 			expected, len(expected), got, len(got))
 	}
@@ -164,59 +252,35 @@ func testBytes(expected, got [][]byte) error {
 	return nil
 }
 
-func funcName(f interface{}) string {
-	name := runtime.FuncForPC(reflect.ValueOf(f).Pointer()).Name()
-	i := strings.IndexByte(name, '/')
-
-	if i != -1 {
-		name = name[i+1:]
+func testStrings(expected, got []string) error {
+	if !reflect.DeepEqual(expected, got) {
+		return fmt.Errorf("string slice failed; expected %v (len=%d), got %v (len=%d)",
+			expected, len(expected), got, len(got))
 	}
 
-	return name
-}
-
-func equalBytes(a, b [][]byte) bool {
-	if len(a) != len(b) {
-		return false
-	}
-
-	for i := range a {
-		if !bytes.Equal(a[i], b[i]) {
-			return false
-		}
-	}
-
-	return true
-}
-
-func isNewline(r rune) bool {
-	return r == '\n' || r == '\r'
-}
-
-func isNotLN(r rune) bool {
-	return !unicode.IsLetter(r) && !unicode.IsNumber(r)
+	return nil
 }
 
 func removeEmptyBytes(s [][]byte) [][]byte {
-	f := s[:0]
+	out := s[:0]
 
 	for _, v := range s {
 		if len(v) > 0 {
-			f = append(f, v)
+			out = append(out, v)
 		}
 	}
 
-	return f
+	return out
 }
 
 func removeEmptyStrings(s []string) []string {
-	f := s[:0]
+	out := s[:0]
 
 	for _, v := range s {
 		if v != "" {
-			f = append(f, v)
+			out = append(out, v)
 		}
 	}
 
-	return f
+	return out
 }

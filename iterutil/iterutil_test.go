@@ -2,12 +2,13 @@ package iterutil_test
 
 import (
 	"reflect"
-	"runtime"
 	"strings"
 	"testing"
 	"unicode"
 
 	"github.com/martingallagher/iter"
+	"github.com/martingallagher/iter/internal/function"
+	"github.com/martingallagher/iter/internal/runes"
 	"github.com/martingallagher/iter/iterutil"
 )
 
@@ -41,13 +42,13 @@ func TestIterUtil(t *testing.T) {
 		f    func(rune) bool
 	}{
 		{iterutil.Fields, unicode.IsSpace},
-		{iterutil.Lines, isNewline},
+		{iterutil.Lines, runes.IsNewline},
 		{iterutil.Numbers, unicode.IsNumber},
-		{iterutil.Words, isNotLN},
+		{iterutil.Words, runes.IsNotLN},
 	}
 
 	for _, v := range iterators {
-		name := funcName(v.f)
+		name := function.Name(v.f)
 
 		t.Run(name, func(t *testing.T) {
 			for _, s := range tests {
@@ -60,44 +61,11 @@ func TestIterUtil(t *testing.T) {
 					values = append(values, iter.String())
 				}
 
-				if !equalStrings(expected, values) {
+				if !reflect.DeepEqual(expected, values) {
 					t.Errorf("%s iterator failed; expected %v (len=%d), got %v (len=%d)",
 						name, expected, l, values, len(values))
 				}
 			}
 		})
 	}
-}
-
-func funcName(f interface{}) string {
-	name := runtime.FuncForPC(reflect.ValueOf(f).Pointer()).Name()
-	i := strings.IndexByte(name, '/')
-
-	if i != -1 {
-		name = name[i+1:]
-	}
-
-	return name
-}
-
-func equalStrings(a, b []string) bool {
-	if len(a) != len(b) {
-		return false
-	}
-
-	for i := range a {
-		if a[i] != b[i] {
-			return false
-		}
-	}
-
-	return true
-}
-
-func isNewline(r rune) bool {
-	return r == '\n' || r == '\r'
-}
-
-func isNotLN(r rune) bool {
-	return !unicode.IsLetter(r) && !unicode.IsNumber(r)
 }

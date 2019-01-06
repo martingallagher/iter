@@ -5,6 +5,7 @@ import (
 	"unicode"
 
 	"github.com/martingallagher/iter"
+	"github.com/martingallagher/iter/internal/runes"
 )
 
 // Fields returns a new string iterator emitting values between each instance
@@ -13,13 +14,9 @@ func Fields(s string) *iter.FuncIter {
 	return iter.NewFuncString(s, unicode.IsSpace)
 }
 
-func isNewline(r rune) bool {
-	return r == '\n' || r == '\r'
-}
-
 // Lines returns a new string iterator emitting values between newlines.
 func Lines(s string) *iter.FuncIter {
-	return iter.NewFuncString(s, isNewline)
+	return iter.NewFuncString(s, runes.IsNewline)
 }
 
 // Numbers returns a new string iterator emitting numeric values.
@@ -27,11 +24,7 @@ func Numbers(s string) *iter.FuncIter {
 	return iter.NewFuncString(s, unicode.IsNumber)
 }
 
-func isNotLN(r rune) bool {
-	return !unicode.IsLetter(r) && !unicode.IsNumber(r)
-}
-
 // Words returns a new string iterator naively emitting words.
 func Words(s string) *iter.FuncIter {
-	return iter.NewFuncString(s, isNotLN)
+	return iter.NewFuncString(s, runes.IsNotLN)
 }
