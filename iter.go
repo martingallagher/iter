@@ -203,7 +203,7 @@ func (i *Iter) Reset() {
 }
 
 // FuncIter is a rune based iterator, iterating
-// rune-by-rune applying a given field function.
+// rune-by-rune applying a given function.
 type FuncIter struct {
 	fn       func(rune) bool
 	b        []byte
