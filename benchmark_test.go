@@ -27,7 +27,7 @@ Go语言的语法接近C语言，但对于变量的声明有所不同。Go语言
 var benchBytes = []byte(benchString)
 
 func BenchmarkBytes(b *testing.B) {
-	iter := NewBytes(benchBytes, spaceBytes)
+	iter := New(benchBytes, spaceBytes)
 
 	for i := 0; i < b.N; i++ {
 		for iter.Next() {
@@ -51,7 +51,7 @@ func BenchmarkString(b *testing.B) {
 }
 
 func BenchmarkBytesForEach(b *testing.B) {
-	iter := NewBytes(benchBytes, spaceBytes)
+	iter := New(benchBytes, spaceBytes)
 
 	for i := 0; i < b.N; i++ {
 		iter.ForEach(func(b []byte) {
@@ -65,7 +65,7 @@ func BenchmarkStringForEach(b *testing.B) {
 	iter := NewString(benchString, space)
 
 	for i := 0; i < b.N; i++ {
-		iter.ForEach(func(s string) {
+		iter.ForEachString(func(s string) {
 			_ = s
 		})
 		iter.Reset()
@@ -73,7 +73,7 @@ func BenchmarkStringForEach(b *testing.B) {
 }
 
 func BenchmarkBytesEmitAll(b *testing.B) {
-	iter := NewBytes(benchBytes, spaceBytes)
+	iter := New(benchBytes, spaceBytes)
 	iter.EmitAll()
 
 	for i := 0; i < b.N; i++ {
@@ -99,7 +99,7 @@ func BenchmarkStringEmitAll(b *testing.B) {
 }
 
 func BenchmarkBytesFunc(b *testing.B) {
-	iter := NewBytesFunc(benchBytes, unicode.IsSpace)
+	iter := NewFunc(benchBytes, unicode.IsSpace)
 
 	for i := 0; i < b.N; i++ {
 		for iter.Next() {
@@ -111,7 +111,7 @@ func BenchmarkBytesFunc(b *testing.B) {
 }
 
 func BenchmarkStringFunc(b *testing.B) {
-	iter := NewStringFunc(benchString, unicode.IsSpace)
+	iter := NewFuncString(benchString, unicode.IsSpace)
 
 	for i := 0; i < b.N; i++ {
 		for iter.Next() {

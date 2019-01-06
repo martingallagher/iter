@@ -32,7 +32,7 @@ func stdCountOccurrences(s, word string) int {
 // iter package
 func iterCountOccurrences(s, word string) int {
   count := 0
-  iter := iter.NewStringFunc(s, isNotLN)
+  iter := iter.NewFuncString(s, isNotLN)
 
   for iter.Next() {
     if strings.EqualFold(word, iter.String()) {

@@ -4,8 +4,8 @@ import "unicode"
 
 // Fields returns a new string iterator emitting values between each instance
 // of one or more consecutive white space runes.
-func Fields(s string) *StringFunc {
-	return NewStringFunc(s, unicode.IsSpace)
+func Fields(s string) *FuncIter {
+	return NewFuncString(s, unicode.IsSpace)
 }
 
 func isNewline(r rune) bool {
@@ -13,13 +13,13 @@ func isNewline(r rune) bool {
 }
 
 // Lines returns a new string iterator emitting values between newlines.
-func Lines(s string) *StringFunc {
-	return NewStringFunc(s, isNewline)
+func Lines(s string) *FuncIter {
+	return NewFuncString(s, isNewline)
 }
 
 // Numbers returns a new string iterator emitting numeric values.
-func Numbers(s string) *StringFunc {
-	return NewStringFunc(s, unicode.IsNumber)
+func Numbers(s string) *FuncIter {
+	return NewFuncString(s, unicode.IsNumber)
 }
 
 func isNotLN(r rune) bool {
@@ -27,6 +27,6 @@ func isNotLN(r rune) bool {
 }
 
 // Words returns a new string iterator naively emitting words.
-func Words(s string) *StringFunc {
-	return NewStringFunc(s, isNotLN)
+func Words(s string) *FuncIter {
+	return NewFuncString(s, isNotLN)
 }

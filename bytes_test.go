@@ -51,7 +51,7 @@ func TestBytes(t *testing.T) {
 			b := []byte(v)
 			expected := removeEmptyBytes(bytes.Split(b, sep))
 			values := make([][]byte, 0, len(expected))
-			iter := NewBytes(b, sep)
+			iter := New(b, sep)
 
 			for iter.Next() {
 				values = append(values, iter.Bytes())
@@ -75,7 +75,7 @@ func TestBytesForEach(t *testing.T) {
 			expected := removeEmptyBytes(bytes.Split(b, sep))
 			l := len(expected)
 			values := make([][]byte, 0, l)
-			iter := NewBytes(b, sep)
+			iter := New(b, sep)
 
 			iter.ForEach(func(b []byte) {
 				values = append(values, b)
@@ -95,7 +95,7 @@ func TestBytesFuncChan(t *testing.T) {
 	expected := bytes.FieldsFunc(b, isNotLN)
 	values := make([][]byte, 0, len(expected))
 
-	for v := range NewBytesFunc(b, isNotLN).Chan() {
+	for v := range NewFunc(b, isNotLN).Chan() {
 		values = append(values, v)
 	}
 
@@ -114,7 +114,7 @@ func TestBytesEmitAll(t *testing.T) {
 			b := []byte(v)
 			expected := bytes.Split(b, sep)
 			values := make([][]byte, 0, len(expected))
-			iter := NewBytes(b, sep)
+			iter := New(b, sep)
 			iter.EmitAll()
 
 			for iter.Next() {
@@ -138,7 +138,7 @@ func TestBytesFunc(t *testing.T) {
 					b := []byte(v)
 					expected := bytes.FieldsFunc(b, f)
 					values := make([][]byte, 0, len(expected))
-					iter := NewBytesFunc(b, f)
+					iter := NewFunc(b, f)
 
 					for iter.Next() {
 						values = append(values, iter.Bytes())

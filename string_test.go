@@ -36,7 +36,7 @@ func TestStringForEach(t *testing.T) {
 			values := make([]string, 0, l)
 			iter := NewString(v, sep)
 
-			iter.ForEach(func(s string) {
+			iter.ForEachString(func(s string) {
 				values = append(values, s)
 			})
 
@@ -77,7 +77,7 @@ func TestStringFunc(t *testing.T) {
 				for _, v := range tests {
 					expected := strings.FieldsFunc(v, f)
 					values := make([]string, 0, len(expected))
-					iter := NewStringFunc(v, f)
+					iter := NewFuncString(v, f)
 
 					for iter.Next() {
 						values = append(values, iter.String())
@@ -96,7 +96,7 @@ func TestStringFunc(t *testing.T) {
 
 func TestStringHelpers(t *testing.T) {
 	iterators := []struct {
-		iter func(string) *StringFunc
+		iter func(string) *FuncIter
 		f    func(rune) bool
 	}{
 		{Fields, unicode.IsSpace},
@@ -220,7 +220,7 @@ func count(s, needle string) int {
 func countForEach(s, needle string) int {
 	count := 0
 
-	Words(s).ForEach(func(v string) {
+	Words(s).ForEachString(func(v string) {
 		if v == needle {
 			count++
 		}
@@ -232,7 +232,7 @@ func countForEach(s, needle string) int {
 func countChan(s, needle string) int {
 	count := 0
 
-	for v := range Words(s).Chan() {
+	for v := range Words(s).ChanString() {
 		if v == needle {
 			count++
 		}
