@@ -1,5 +1,7 @@
+.ONESHELL:
+
 lint:
-	@command -v golangci-lint || go get github.com/golangci/golangci-lint/cmd/golangci-lint
+	@command -v golangci-lint > /dev/null || go get github.com/golangci/golangci-lint/cmd/golangci-lint
 	golangci-lint run --exclude-use-default=false \
 		--enable=golint \
 		--enable=staticcheck \
@@ -20,7 +22,7 @@ bench:
 
 fuzz-clean:
 	# Copy crashers to testdata for regression testing
-	find crashers -type f | grep -v '\.' | xargs -i cp {} testdata
+	@find crashers -type f | grep -v '\.' | xargs -i cp {} testdata
 	rm -rf corpus
 	rm -rf crashers
 	rm -rf suppressions

@@ -49,14 +49,13 @@ func iterCountOccurrences(s, word string) int {
     goos: linux
     goarch: amd64
     pkg: github.com/martingallagher/iter
-    BenchmarkBytes-8           	  100000	     20970 ns/op	       0 B/op	       0 allocs/op
-    BenchmarkString-8          	  100000	     21336 ns/op	       0 B/op	       0 allocs/op
-    BenchmarkBytesForEach-8    	  100000	     21333 ns/op	       0 B/op	       0 allocs/op
-    BenchmarkStringForEach-8   	  100000	     21186 ns/op	       0 B/op	       0 allocs/op
-    BenchmarkBytesEmitAll-8    	  100000	     20951 ns/op	       0 B/op	       0 allocs/op
-    BenchmarkStringEmitAll-8   	  100000	     20948 ns/op	       0 B/op	       0 allocs/op
-    BenchmarkBytesFunc-8       	  100000	     19442 ns/op	       0 B/op	       0 allocs/op
-    BenchmarkStringFunc-8      	  100000	     19806 ns/op	       0 B/op	       0 allocs/op
-    BenchmarkStdStringsMap-8   	  100000	     21504 ns/op	   11264 B/op	       4 allocs/op
+    pkg: github.com/martingallagher/iter
+    BenchmarkBytes-8           	  100000	     21530 ns/op	       0 B/op	       0 allocs/op
+    BenchmarkString-8          	  100000	     21568 ns/op	       0 B/op	       0 allocs/op
+    BenchmarkBytesEmitAll-8    	  100000	     21730 ns/op	       0 B/op	       0 allocs/op
+    BenchmarkStringEmitAll-8   	  100000	     21678 ns/op	       0 B/op	       0 allocs/op
+    BenchmarkBytesFunc-8       	  100000	     19977 ns/op	       0 B/op	       0 allocs/op
+    BenchmarkStringFunc-8      	  100000	     20018 ns/op	       0 B/op	       0 allocs/op
+    BenchmarkStdStringsMap-8   	   50000	     22758 ns/op	   11264 B/op	       4 allocs/op
     PASS
-    ok  	github.com/martingallagher/iter	20.693s
+    ok  	github.com/martingallagher/iter	15.395s

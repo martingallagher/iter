@@ -139,32 +139,14 @@ func (i *Iter) nextRune() bool {
 	return true
 }
 
-// ForEach executes a provided function once for each byte slice value.
-func (i *Iter) ForEach(fn func(b []byte)) {
-	i.Reset()
-
-	for i.Next() {
-		fn(i.v)
-	}
-}
-
-// ForEachString executes a provided function once for each string value.
-func (i *Iter) ForEachString(fn func(s string)) {
-	i.Reset()
-
-	for i.Next() {
-		fn(i.String())
-	}
-}
-
 // Chan returns a channel for receiving iterator byte values.
 func (i *Iter) Chan() <-chan []byte {
 	values := make(chan []byte)
 
 	go func() {
-		i.ForEach(func(b []byte) {
-			values <- b
-		})
+		for i.Next() {
+			values <- i.v
+		}
 
 		close(values)
 	}()
@@ -177,9 +159,9 @@ func (i *Iter) ChanString() <-chan string {
 	values := make(chan string)
 
 	go func() {
-		i.ForEachString(func(s string) {
-			values <- s
-		})
+		for i.Next() {
+			values <- i.String()
+		}
 
 		close(values)
 	}()
@@ -268,32 +250,14 @@ func (f *FuncIter) Next() bool {
 	return false
 }
 
-// ForEach executes a provided function once for each byte slice value.
-func (f *FuncIter) ForEach(fn func(b []byte)) {
-	f.Reset()
-
-	for f.Next() {
-		fn(f.v)
-	}
-}
-
-// ForEachString executes a provided function once for each string value.
-func (f *FuncIter) ForEachString(fn func(s string)) {
-	f.Reset()
-
-	for f.Next() {
-		fn(f.String())
-	}
-}
-
 // Chan returns a channel for receiving iterator values.
 func (f *FuncIter) Chan() <-chan []byte {
 	values := make(chan []byte)
 
 	go func() {
-		f.ForEach(func(b []byte) {
-			values <- b
-		})
+		for f.Next() {
+			values <- f.v
+		}
 
 		close(values)
 	}()
@@ -306,9 +270,9 @@ func (f *FuncIter) ChanString() <-chan string {
 	values := make(chan string)
 
 	go func() {
-		f.ForEachString(func(s string) {
-			values <- s
-		})
+		for f.Next() {
+			values <- unsafeString(f.v)
+		}
 
 		close(values)
 	}()

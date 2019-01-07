@@ -50,28 +50,6 @@ func BenchmarkString(b *testing.B) {
 	}
 }
 
-func BenchmarkBytesForEach(b *testing.B) {
-	iter := New(benchBytes, spaceBytes)
-
-	for i := 0; i < b.N; i++ {
-		iter.ForEach(func(b []byte) {
-			_ = b
-		})
-		iter.Reset()
-	}
-}
-
-func BenchmarkStringForEach(b *testing.B) {
-	iter := NewString(benchString, space)
-
-	for i := 0; i < b.N; i++ {
-		iter.ForEachString(func(s string) {
-			_ = s
-		})
-		iter.Reset()
-	}
-}
-
 func BenchmarkBytesEmitAll(b *testing.B) {
 	iter := New(benchBytes, spaceBytes)
 	iter.EmitAll()

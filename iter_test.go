@@ -68,30 +68,6 @@ func TestBytes(t *testing.T) {
 	}
 }
 
-func TestBytesForEach(t *testing.T) {
-	for _, sep := range seperators {
-		sep := []byte(sep)
-
-		for _, v := range tests {
-			b := []byte(v)
-			expected := removeEmptyBytes(bytes.Split(b, sep))
-			l := len(expected)
-			values := make([][]byte, 0, l)
-			iter := New(b, sep)
-
-			iter.ForEach(func(b []byte) {
-				values = append(values, b)
-			})
-
-			err := testBytes(expected, values)
-
-			if err != nil {
-				t.Error(err)
-			}
-		}
-	}
-}
-
 func TestBytesFuncChan(t *testing.T) {
 	b := []byte(tests[4])
 	expected := bytes.FieldsFunc(b, runes.IsNotLN)
@@ -167,27 +143,6 @@ func TestString(t *testing.T) {
 			for iter.Next() {
 				values = append(values, iter.String())
 			}
-
-			err := testStrings(expected, values)
-
-			if err != nil {
-				t.Error(err)
-			}
-		}
-	}
-}
-
-func TestStringForEach(t *testing.T) {
-	for _, sep := range seperators {
-		for _, v := range tests {
-			expected := removeEmptyStrings(strings.Split(v, sep))
-			l := len(expected)
-			values := make([]string, 0, l)
-			iter := NewString(v, sep)
-
-			iter.ForEachString(func(s string) {
-				values = append(values, s)
-			})
 
 			err := testStrings(expected, values)
 
