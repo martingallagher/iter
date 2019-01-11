@@ -4,8 +4,11 @@ package iter
 import (
 	"bytes"
 	"reflect"
+	"unicode"
 	"unicode/utf8"
 	"unsafe"
+
+	"github.com/martingallagher/iter/internal/runes"
 )
 
 // Iterator defines the iterator interface.
@@ -263,4 +266,32 @@ func Chan(i Iterator) <-chan Value {
 	}()
 
 	return c
+}
+
+// ForEach provides for-each semantics for iterators.
+func ForEach(i Iterator, fn func(Value)) {
+	for i.Next() {
+		fn(i.Value())
+	}
+}
+
+// Fields returns a new string iterator emitting values between each instance
+// of one or more consecutive white space runes.
+func Fields(s string) *FuncIter {
+	return NewFuncString(s, unicode.IsSpace)
+}
+
+// Lines returns a new string iterator emitting values between newlines.
+func Lines(s string) *FuncIter {
+	return NewFuncString(s, runes.IsNewline)
+}
+
+// Numbers returns a new string iterator emitting numeric values.
+func Numbers(s string) *FuncIter {
+	return NewFuncString(s, unicode.IsNumber)
+}
+
+// Words returns a new string iterator naively emitting words.
+func Words(s string) *FuncIter {
+	return NewFuncString(s, runes.IsNotLN)
 }
