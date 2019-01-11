@@ -17,12 +17,6 @@ type Iterator interface {
 	Value() Value
 }
 
-// Valuer defines the bytes/string value interface.
-type Valuer interface {
-	Bytes() []byte
-	String() string
-}
-
 // Value represents an iterator value.
 type Value []byte
 
