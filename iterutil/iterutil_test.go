@@ -58,7 +58,7 @@ func TestIterUtil(t *testing.T) {
 				values := make([]string, 0, l)
 
 				for iter.Next() {
-					values = append(values, iter.String())
+					values = append(values, iter.Value().String())
 				}
 
 				if !reflect.DeepEqual(expected, values) {

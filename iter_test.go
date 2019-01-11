@@ -56,7 +56,7 @@ func TestBytes(t *testing.T) {
 			iter := New(b, sep)
 
 			for iter.Next() {
-				values = append(values, iter.Bytes())
+				values = append(values, iter.Value().Bytes())
 			}
 
 			err := testBytes(expected, values)
@@ -65,22 +65,6 @@ func TestBytes(t *testing.T) {
 				t.Error(err)
 			}
 		}
-	}
-}
-
-func TestBytesFuncChan(t *testing.T) {
-	b := []byte(tests[4])
-	expected := bytes.FieldsFunc(b, runes.IsNotLN)
-	values := make([][]byte, 0, len(expected))
-
-	for v := range NewFunc(b, runes.IsNotLN).Chan() {
-		values = append(values, v)
-	}
-
-	err := testBytes(expected, values)
-
-	if err != nil {
-		t.Error(err)
 	}
 }
 
@@ -96,7 +80,7 @@ func TestBytesEmitAll(t *testing.T) {
 			iter.EmitAll()
 
 			for iter.Next() {
-				values = append(values, iter.Bytes())
+				values = append(values, iter.Value().Bytes())
 			}
 
 			err := testBytes(expected, values)
@@ -119,7 +103,7 @@ func TestBytesFunc(t *testing.T) {
 					iter := NewFunc(b, f)
 
 					for iter.Next() {
-						values = append(values, iter.Bytes())
+						values = append(values, iter.Value().Bytes())
 					}
 
 					err := testBytes(expected, values)
@@ -141,7 +125,7 @@ func TestString(t *testing.T) {
 			iter := NewString(v, sep)
 
 			for iter.Next() {
-				values = append(values, iter.String())
+				values = append(values, iter.Value().String())
 			}
 
 			err := testStrings(expected, values)
@@ -162,7 +146,7 @@ func TestStringEmitAll(t *testing.T) {
 			iter.EmitAll()
 
 			for iter.Next() {
-				values = append(values, iter.String())
+				values = append(values, iter.Value().String())
 			}
 
 			err := testStrings(expected, values)
@@ -184,7 +168,7 @@ func TestStringFunc(t *testing.T) {
 					iter := NewFuncString(v, f)
 
 					for iter.Next() {
-						values = append(values, iter.String())
+						values = append(values, iter.Value().String())
 					}
 
 					err := testStrings(expected, values)

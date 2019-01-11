@@ -31,10 +31,16 @@ func BenchmarkBytes(b *testing.B) {
 
 	for i := 0; i < b.N; i++ {
 		for iter.Next() {
-			_ = iter.Bytes()
+			_ = iter.Value().Bytes()
 		}
 
 		iter.Reset()
+	}
+}
+
+func BenchmarkNewString(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		NewString(benchString, " ")
 	}
 }
 
@@ -43,7 +49,7 @@ func BenchmarkString(b *testing.B) {
 
 	for i := 0; i < b.N; i++ {
 		for iter.Next() {
-			_ = iter.String()
+			_ = iter.Value().String()
 		}
 
 		iter.Reset()
@@ -56,7 +62,7 @@ func BenchmarkBytesEmitAll(b *testing.B) {
 
 	for i := 0; i < b.N; i++ {
 		for iter.Next() {
-			_ = iter.Bytes()
+			_ = iter.Value().Bytes()
 		}
 
 		iter.Reset()
@@ -69,7 +75,7 @@ func BenchmarkStringEmitAll(b *testing.B) {
 
 	for i := 0; i < b.N; i++ {
 		for iter.Next() {
-			_ = iter.String()
+			_ = iter.Value().String()
 		}
 
 		iter.Reset()
@@ -81,7 +87,7 @@ func BenchmarkBytesFunc(b *testing.B) {
 
 	for i := 0; i < b.N; i++ {
 		for iter.Next() {
-			_ = iter.Bytes()
+			_ = iter.Value().Bytes()
 		}
 
 		iter.Reset()
@@ -93,7 +99,7 @@ func BenchmarkStringFunc(b *testing.B) {
 
 	for i := 0; i < b.N; i++ {
 		for iter.Next() {
-			_ = iter.String()
+			_ = iter.Value().String()
 		}
 
 		iter.Reset()

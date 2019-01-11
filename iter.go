@@ -8,6 +8,31 @@ import (
 	"unsafe"
 )
 
+// Iterator defines the iterator interface.
+type Iterator interface {
+	Next() bool
+	Value() Value
+}
+
+// Valuer defines the bytes/string value interface.
+type Valuer interface {
+	Bytes() []byte
+	String() string
+}
+
+// Value represents an iterator value.
+type Value []byte
+
+// Bytes returns the bytes value.
+func (v Value) Bytes() []byte {
+	return v
+}
+
+// String returns the string value.
+func (v Value) String() string {
+	return unsafeString(v)
+}
+
 // Iter implements a substring iterator.
 type Iter struct {
 	b           []byte
@@ -139,44 +164,9 @@ func (i *Iter) nextRune() bool {
 	return true
 }
 
-// Chan returns a channel for receiving iterator byte values.
-func (i *Iter) Chan() <-chan []byte {
-	values := make(chan []byte)
-
-	go func() {
-		for i.Next() {
-			values <- i.v
-		}
-
-		close(values)
-	}()
-
-	return values
-}
-
-// ChanString returns a channel for receiving iterator string values.
-func (i *Iter) ChanString() <-chan string {
-	values := make(chan string)
-
-	go func() {
-		for i.Next() {
-			values <- i.String()
-		}
-
-		close(values)
-	}()
-
-	return values
-}
-
-// Bytes returns the current byte slice value.
-func (i *Iter) Bytes() []byte {
+// Value returns the current value.
+func (i *Iter) Value() Value {
 	return i.v
-}
-
-// String returns the current string value.
-func (i *Iter) String() string {
-	return unsafeString(i.v)
 }
 
 // Reset resets the iterator start position.
@@ -250,47 +240,27 @@ func (f *FuncIter) Next() bool {
 	return false
 }
 
-// Chan returns a channel for receiving iterator values.
-func (f *FuncIter) Chan() <-chan []byte {
-	values := make(chan []byte)
-
-	go func() {
-		for f.Next() {
-			values <- f.v
-		}
-
-		close(values)
-	}()
-
-	return values
-}
-
-// ChanString returns a channel for receiving iterator string values.
-func (f *FuncIter) ChanString() <-chan string {
-	values := make(chan string)
-
-	go func() {
-		for f.Next() {
-			values <- unsafeString(f.v)
-		}
-
-		close(values)
-	}()
-
-	return values
-}
-
-// Bytes returns the current byte slice value.
-func (f *FuncIter) Bytes() []byte {
+// Value returns the current value.
+func (f *FuncIter) Value() Value {
 	return f.v
-}
-
-// String returns the current string value.
-func (f *FuncIter) String() string {
-	return unsafeString(f.v)
 }
 
 // Reset resets the iterator start position.
 func (f *FuncIter) Reset() {
 	f.start = 0
+}
+
+// Chan returns a channel for receiving iterator values.
+func Chan(i Iterator) <-chan Value {
+	c := make(chan Value)
+
+	go func() {
+		for i.Next() {
+			c <- i.Value()
+		}
+
+		close(c)
+	}()
+
+	return c
 }
